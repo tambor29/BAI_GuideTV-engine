@@ -14,6 +14,15 @@ public class MovieDetails {
     String stationLogo;
     String duration;
     String director;
+    boolean broadcast;
+
+    public boolean isBroadcast() {
+        return broadcast;
+    }
+
+    public void setBroadcast(boolean broadcast) {
+        this.broadcast = broadcast;
+    }
 
     public String getLongDescription() {
         return longDescription;

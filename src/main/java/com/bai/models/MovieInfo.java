@@ -9,6 +9,18 @@ public class MovieInfo {
     String shortDescription;
     String movieImage;
 
+    public MovieInfo(){}
+
+    MovieInfo(MovieInfoBuilder mib){
+        movieTitle = mib.movieTitle;
+        releaseDate = mib.releaseDate;
+        movieType = mib.movieType;
+        country = mib.country;
+        refToMoreInfo = mib.refToMoreInfo;
+        shortDescription = mib.shortDescription;
+        movieImage = mib.movieImage;
+    }
+
     public String getMovieTitle() {
         return movieTitle;
     }

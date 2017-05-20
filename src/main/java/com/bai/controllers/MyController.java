@@ -2,8 +2,8 @@ package com.bai.controllers;
 
 import com.bai.models.MovieDetails;
 import com.bai.models.MovieInfo;
-import com.bai.models.RawData;
 import com.bai.services.extractor.Extractor;
+import com.bai.services.extractor.Operation;
 import com.bai.services.parser.DataParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,67 +23,68 @@ public class MyController {
     @Autowired
     DataParser dataParser;
 
+
     @CrossOrigin
     @RequestMapping("/list/{title}")
     public List<MovieInfo> sendListOfMovies(@PathVariable String title){
         List<MovieInfo> movies = null;
         try {
-            RawData data = extractor.extractMovieList(title);
-            movies = dataParser.parseMovieList(data);
-
+          movies =  dataParser.parseMovieList(extractor.extractMovieList(title, Operation.SEARCH));
         }
         catch (IOException  e){
             System.out.println("Error");
         }
-
         return movies;
     }
 
-
-    public MovieDetails sendMovieDetails(){
+    @CrossOrigin
+    @RequestMapping("/details/{type}/{movieId}")
+    public MovieDetails sendMovieDetails(@PathVariable("type") String type, @PathVariable("movieId") String movieId){
         MovieDetails details = new MovieDetails();
 
         return details;
     }
-    @CrossOrigin
-    @RequestMapping("/list-test")
-    public List<MovieInfo> mokMoviesList(){
-        List<MovieInfo> movies = new ArrayList<>();
-
-        MovieInfo pierwszy = new MovieInfo();
-        pierwszy.setCountry("USA");
-        pierwszy.setLinkDoZdjecia("https://d-tm.ppstatic.pl/83/9b/cc28a1f0183cd1f328a835365503.200.jpg");
-        pierwszy.setMovieTitle("Thor");
-        pierwszy.setMovieType("Film przygodowy");
-        pierwszy.setReleaseDate("2011");
-        pierwszy.setShortDescription("Ekranizacja komiksu Marvela. Nordycki bóg Thor zostaje wygnany z Asgardu przez ojca, Odyna. Ma żyć jako śmiertelnik, by nauczyć się pokory. Źródło jego mocy - młot Mjöllnir - zostaje mu odebrane.");
-        pierwszy.setRefToMoreInfo("337743");
-
-        MovieInfo drugi = new MovieInfo();
-        drugi.setCountry("Drugi Kraj");
-        drugi.setLinkDoZdjecia("https://d-tm.ppstatic.pl/a3/17/544e10ea07fab40a692130b08d59.200.jpg");
-        drugi.setMovieTitle("Drugi tytul");
-        drugi.setMovieType("Drugi gatunek");
-        drugi.setReleaseDate("2000");
-        drugi.setShortDescription("To jest opis drugiego filmu");
-        drugi.setRefToMoreInfo("drugie id");
 
 
-        MovieInfo trzeci = new MovieInfo();
-        trzeci.setCountry("trzeci Kraj");
-        trzeci.setLinkDoZdjecia("https://d-tm.ppstatic.pl/7e/9f/997330bfaafb9d9ef5f096e7415b.200.jpg");
-        trzeci.setMovieTitle("trzeci tytul");
-        trzeci.setMovieType("trzeci gatunek");
-        trzeci.setReleaseDate("2000");
-        trzeci.setShortDescription("To jest opis trzeciego filmu");
-        trzeci.setRefToMoreInfo("trzecie id");
-
-        movies.add(pierwszy);
-        movies.add(drugi);
-        movies.add(trzeci);
-
-        return movies;
-    }
+//    @CrossOrigin
+//    @RequestMapping("/list-test/")
+//    public List<MovieInfo> mokMoviesList(){
+//        List<MovieInfo> movies = new ArrayList<>();
+//
+//        MovieInfo pierwszy = new MovieInfo();
+//        pierwszy.setCountry("USA");
+//        pierwszy.setLinkDoZdjecia("https://d-tm.ppstatic.pl/83/9b/cc28a1f0183cd1f328a835365503.200.jpg");
+//        pierwszy.setMovieTitle("Thor");
+//        pierwszy.setMovieType("Film przygodowy");
+//        pierwszy.setReleaseDate("2011");
+//        pierwszy.setShortDescription("Ekranizacja komiksu Marvela. Nordycki bóg Thor zostaje wygnany z Asgardu przez ojca, Odyna. Ma żyć jako śmiertelnik, by nauczyć się pokory. Źródło jego mocy - młot Mjöllnir - zostaje mu odebrane.");
+//        pierwszy.setRefToMoreInfo("337743");
+//
+//        MovieInfo drugi = new MovieInfo();
+//        drugi.setCountry("Drugi Kraj");
+//        drugi.setLinkDoZdjecia("https://d-tm.ppstatic.pl/a3/17/544e10ea07fab40a692130b08d59.200.jpg");
+//        drugi.setMovieTitle("Drugi tytul");
+//        drugi.setMovieType("Drugi gatunek");
+//        drugi.setReleaseDate("2000");
+//        drugi.setShortDescription("To jest opis drugiego filmu");
+//        drugi.setRefToMoreInfo("drugie id");
+//
+//
+//        MovieInfo trzeci = new MovieInfo();
+//        trzeci.setCountry("trzeci Kraj");
+//        trzeci.setLinkDoZdjecia("https://d-tm.ppstatic.pl/7e/9f/997330bfaafb9d9ef5f096e7415b.200.jpg");
+//        trzeci.setMovieTitle("trzeci tytul");
+//        trzeci.setMovieType("trzeci gatunek");
+//        trzeci.setReleaseDate("2000");
+//        trzeci.setShortDescription("To jest opis trzeciego filmu");
+//        trzeci.setRefToMoreInfo("trzecie id");
+//
+//        movies.add(pierwszy);
+//        movies.add(drugi);
+//        movies.add(trzeci);
+//
+//        return movies;
+//    }
 
     @CrossOrigin
     @RequestMapping("/detale-test")
