@@ -1,44 +1,47 @@
 package com.bai.services.parser;
 
 import com.bai.models.MovieInfo;
+import com.bai.models.MovieInfoBuilder;
 import com.bai.models.RawData;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Service;
 
-import java.awt.peer.SystemTrayPeer;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+
 @Service
 public class DataParserImpl implements DataParser {
-    public enum InfoType{
+
+    private enum InfoType{
         COUNTRY,
         YEAR
     }
 
     @Override
     public List<MovieInfo> parseMovieList(RawData data) {
-        List<MovieInfo> movies = data
+         return  data
                 .getDataSnippet()
                 .select("li")
                 .stream()
                 .map(this::parseMovieInformation)
                 .collect(Collectors.toList());
 
-        return movies;
     }
 
     private MovieInfo parseMovieInformation(Element li){
-        MovieInfo movie = new MovieInfo();
-        movie.setLinkDoZdjecia(parseMovieImage(li));
-        movie.setRefToMoreInfo(parseLinkToMoreInfo(li));
-        movie.setShortDescription(parseMovieDescription(li));
-        movie.setCountry(parseMovieCountryOrYear(li, InfoType.COUNTRY));
-        movie.setMovieTitle(parseMovieTitle(li));
-        movie.setReleaseDate(parseMovieCountryOrYear(li, InfoType.YEAR));
-        movie.setMovieType(parseMovieType(li));
-        return movie;
+        MovieInfoBuilder movieBuilder = new MovieInfoBuilder();
+
+        return  movieBuilder
+                .movieImage(parseMovieImage(li))
+                .refToMoreInfo(parseLinkToMoreInfo(li))
+                .shortDescription(parseMovieDescription(li))
+                .country(parseMovieCountryOrYear(li, InfoType.COUNTRY))
+                .movieTitle(parseMovieTitle(li))
+                .releaseDate(parseMovieCountryOrYear(li, InfoType.YEAR))
+                .movieType(parseMovieType(li))
+                .build();
     }
 
     private String parseLinkToMoreInfo(Element element) {
@@ -69,8 +72,9 @@ public class DataParserImpl implements DataParser {
                 .select("a p span")
                 .first()
                 .text();
-        return country
-                .split(" ")[type.ordinal()];
+
+        String[] split = country.split(" ");
+        return (split.length > type.ordinal())? split[type.ordinal()]: "";
     }
 
     private String parseMovieType(Element element){

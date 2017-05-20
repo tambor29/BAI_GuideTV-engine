@@ -7,5 +7,5 @@ import java.io.IOException;
 public interface Extractor  {
     String SERVICE_URL = "http://www.telemagazyn.pl";
 
-    RawData extractMovieList(String title) throws IOException;
+    RawData extractMovieList(String title, Operation operation) throws IOException;
 }
