@@ -5,9 +5,9 @@ import com.bai.models.MovieInfo;
 import com.bai.models.RawData;
 import com.bai.services.extractor.Extractor;
 import com.bai.services.parser.DataParser;
-import com.bai.services.parser.DataParserImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,19 +21,15 @@ public class MyController {
     @Autowired
     Extractor extractor;
     @Autowired
-    DataParser parser;
+    DataParser dataParser;
 
     @CrossOrigin
-    @RequestMapping("/list")
-    public List<String> sendListOfMovies(){
-        List<String> movies = new ArrayList<>();
-        movies.add("Captain America");
-        movies.add("Iron Man");
-        movies.add("Harry Potter");
+    @RequestMapping("/list/{title}")
+    public List<MovieInfo> sendListOfMovies(@PathVariable String title){
+        List<MovieInfo> movies = null;
         try {
-            RawData shrek = extractor.extractMovieList("shrek");
-            parser = new DataParserImpl();
-            parser.parseMovieList(shrek);
+            RawData data = extractor.extractMovieList(title);
+            movies = dataParser.parseMovieList(data);
 
         }
         catch (IOException  e){
