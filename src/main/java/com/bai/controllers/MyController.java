@@ -3,8 +3,8 @@ package com.bai.controllers;
 import com.bai.models.MovieDetails;
 import com.bai.models.MovieInfo;
 import com.bai.services.extractor.Extractor;
-import com.bai.services.extractor.Operation;
 import com.bai.services.parser.DataParser;
+import com.bai.services.parser.DetailsParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,14 +22,15 @@ public class MyController {
     Extractor extractor;
     @Autowired
     DataParser dataParser;
-
+    @Autowired
+    DetailsParser detailParser;
 
     @CrossOrigin
     @RequestMapping("/list/{title}")
     public List<MovieInfo> sendListOfMovies(@PathVariable String title){
         List<MovieInfo> movies = null;
         try {
-          movies =  dataParser.parseMovieList(extractor.extractMovieList(title, Operation.SEARCH));
+          movies =  dataParser.parseMovieList(extractor.extractMovieList(title/*, Operation.SEARCH*/));
         }
         catch (IOException  e){
             System.out.println("Error");
@@ -40,8 +41,12 @@ public class MyController {
     @CrossOrigin
     @RequestMapping("/details/{type}/{movieId}")
     public MovieDetails sendMovieDetails(@PathVariable("type") String type, @PathVariable("movieId") String movieId){
-        MovieDetails details = new MovieDetails();
-
+        MovieDetails details = null;
+        try {
+           details = detailParser.parse(extractor.extractDetails("/"+type+"/"+movieId+"/"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return details;
     }
 
@@ -86,25 +91,26 @@ public class MyController {
 //        return movies;
 //    }
 
-    @CrossOrigin
-    @RequestMapping("/detale-test")
-    public MovieDetails mokMovieDetails(){
-        MovieDetails details = new MovieDetails();
-        details.setDirector("Lilly Wachowski, Lana Wachowski");
-        details.setDuration("138 minut");
-        details.setEmissionDay("19");
-        details.setEmissionMonth("5");
-        details.setEmissionYear("2017");
-        details.setHour("23");
-        details.setMinute("10");
-        details.setStation("TVN");
-        details.setStationLogo("https://d-tm.ppstatic.pl/loga_stacji/tvn.png?0");
-        details.setLongDescription("Maszyny odkryły lokalizację Syjonu i wysyłają w stronę miasta armię strażników, która ma rozprawić się z ludźmi. Obdarzony niezwykłymi zdolnościami Neo i jego sprzymierzeńcy muszą ich powstrzymać. Za radą Wyroczni wyruszają na poszukiwanie Klucznika, który może otworzyć drzwi prowadzące do Źródła. Wyprawę utrudnia agent Smith, który nie tylko udoskonalił metody walki, ale nauczył się replikować.");
-        List<String> aktorzy = new ArrayList<>();
-        aktorzy.add("Keanu Reeves jako Neo");
-        aktorzy.add("Laurence Fishburne jako Morfeusz");
-        aktorzy.add("Jada pinket Smith jako Niobe");
-        details.setActors(aktorzy);
-        return details;
-    }
+//    @CrossOrigin
+//    @RequestMapping("/detale-test")
+//    public MovieDetails mokMovieDetails(){
+//        MovieDetails details = new MovieDetails();
+//        details.setDirector("Lilly Wachowski, Lana Wachowski");
+//        details.setDuration("138 minut");
+//        details.setEmissionDay("19");
+//        details.setEmissionMonth("5");
+//        details.setEmissionYear("2017");
+//        details.setHour("23");
+//        details.setMinute("10");
+//        details.setStation("TVN");
+//        details.setStationLogo("https://d-tm.ppstatic.pl/loga_stacji/tvn.png?0");
+//        details.setLongDescription("Maszyny odkryły lokalizację Syjonu i wysyłają w stronę miasta armię strażników, która ma rozprawić się z ludźmi. Obdarzony niezwykłymi zdolnościami Neo i jego sprzymierzeńcy muszą ich powstrzymać. Za radą Wyroczni wyruszają na poszukiwanie Klucznika, który może otworzyć drzwi prowadzące do Źródła. Wyprawę utrudnia agent Smith, który nie tylko udoskonalił metody walki, ale nauczył się replikować.");
+//        List<String> aktorzy = new ArrayList<>();
+//        aktorzy.add("Keanu Reeves jako Neo");
+//        aktorzy.add("Laurence Fishburne jako Morfeusz");
+//        aktorzy.add("Jada pinket Smith jako Niobe");
+//        details.setActors(aktorzy);
+//        details.setBroadcast(true);
+//        return details;
+//    }
 }

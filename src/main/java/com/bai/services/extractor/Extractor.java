@@ -1,5 +1,6 @@
 package com.bai.services.extractor;
 
+import com.bai.models.MovieDetails;
 import com.bai.models.RawData;
 
 import java.io.IOException;
@@ -7,5 +8,6 @@ import java.io.IOException;
 public interface Extractor  {
     String SERVICE_URL = "http://www.telemagazyn.pl";
 
-    RawData extractMovieList(String title, Operation operation) throws IOException;
+    RawData extractMovieList(String title) throws IOException;
+    RawData extractDetails(String movieUrl) throws IOException;
 }
